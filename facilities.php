@@ -51,43 +51,51 @@ if (isset($_GET['edit'])) {
 ?>
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Fasilitas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
-
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-tools text-warning me-2"></i>Pengaduan Fasilitas</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="index.php"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
-                <a class="nav-link active" href="facilities.php"><i class="bi bi-building-gear me-1"></i> Kelola Fasilitas</a>
-                <a class="nav-link" href="complaints.php"><i class="bi bi-chat-square-text me-1"></i> Daftar Pengaduan</a>
+<body class="app-body">
+    <div class="app-shell">
+        <aside class="app-sidebar" aria-label="Navigasi utama">
+            <div class="sidebar-group">
+                <a href="index.php" class="sidebar-link" title="Dashboard" aria-label="Dashboard"><i class="bi bi-house-door"></i></a>
+                <a href="facilities.php" class="sidebar-link active" title="Daftar Fasilitas" aria-label="Daftar Fasilitas"><i class="bi bi-building"></i></a>
+                <a href="complaints.php" class="sidebar-link" title="Laporan Pengaduan" aria-label="Laporan Pengaduan"><i class="bi bi-clipboard2-check"></i></a>
             </div>
-        </div>
-    </nav>
+        </aside>
 
-    <div class="container">
-        <h2 class="mb-4"><i class="bi bi-building-fill-gear me-2"></i>Kelola Data Fasilitas</h2>
+        <main class="app-main">
+            <header class="page-head">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Kelola data fasilitas sekolah.</p>
+                </div>
+            </header>
 
-        <?php if ($error): ?>
-            <div class="alert alert-danger shadow-sm"><i class="bi bi-exclamation-triangle-fill me-2"></i><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
-        <?php if ($success): ?>
-            <div class="alert alert-success shadow-sm"><i class="bi bi-check-circle-fill me-2"></i><?= htmlspecialchars($success) ?></div>
-        <?php endif; ?>
+            <nav class="page-tabs" aria-label="Navigasi halaman">
+                <a class="page-tab" href="index.php">Dashboard</a>
+                <a class="page-tab active" href="facilities.php">Daftar Fasilitas</a>
+                <a class="page-tab" href="complaints.php">Laporan</a>
+            </nav>
 
-        <div class="row">
-            <!-- Form Input / Edit -->
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h4 class="card-title mb-3"><i class="bi bi-<?= $editData ? 'pencil-square text-warning' : 'plus-circle text-primary' ?> me-2"></i><?= $editData ? 'Edit Fasilitas' : 'Tambah Fasilitas' ?></h4>
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            <?php if ($success): ?>
+                <div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+
+            <div class="content-grid-facilities">
+                <section class="panel">
+                    <div class="panel-body">
+                        <h2 class="panel-title"><i class="bi bi-<?= $editData ? 'pencil-square' : 'plus-circle' ?>"></i> <?= $editData ? 'Edit Fasilitas' : 'Tambah Fasilitas' ?></h2>
+                        <p class="panel-caption mb-3"><?= $editData ? 'Perbarui informasi fasilitas yang dipilih.' : 'Tambahkan fasilitas sekolah baru.' ?></p>
+
                         <form method="POST" action="">
                             <input type="hidden" name="action" value="<?= $editData ? 'edit' : 'add' ?>">
                             <?php if ($editData): ?>
@@ -107,50 +115,54 @@ if (isset($_GET['edit'])) {
                                 <textarea name="description" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?= htmlspecialchars($editData['description'] ?? '') ?></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 shadow-sm"><i class="bi bi-save me-1"></i> <?= $editData ? 'Simpan Perubahan' : 'Tambah Fasilitas' ?></button>
+                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save me-1"></i> <?= $editData ? 'Simpan Perubahan' : 'Tambah Fasilitas' ?></button>
                             <?php if ($editData): ?>
-                                <a href="facilities.php" class="btn btn-secondary w-100 mt-2"><i class="bi bi-x-circle me-1"></i> Batal</a>
+                                <a href="facilities.php" class="btn btn-soft w-100 mt-2"><i class="bi bi-x-circle me-1"></i> Batal</a>
                             <?php endif; ?>
                         </form>
                     </div>
-                </div>
-            </div>
+                </section>
 
-            <!-- Tabel Data Fasilitas -->
-            <div class="col-md-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h4 class="card-title mb-3"><i class="bi bi-list-ul me-2"></i>Daftar Fasilitas Sekolah</h4>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-dark">
+                <section class="panel">
+                    <div class="panel-body">
+                        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+                            <div>
+                                <h2 class="panel-title"><i class="bi bi-list-ul"></i> Daftar Fasilitas Sekolah</h2>
+                                <p class="panel-caption"><?= count($facilities) ?> fasilitas tersimpan.</p>
+                            </div>
+                        </div>
+                        <div class="table-responsive table-wrap">
+                            <table class="table table-hover facilities-table align-middle">
+                                <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Nama</th>
                                         <th>Lokasi</th>
                                         <th>Deskripsi</th>
-                                        <th>Aksi</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (empty($facilities)): ?>
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted py-4"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Belum ada data fasilitas.</td>
+                                            <td colspan="5" class="text-center text-muted empty-state"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Belum ada data fasilitas.</td>
                                         </tr>
                                     <?php else: ?>
                                         <?php foreach ($facilities as $index => $fac): ?>
                                             <tr>
                                                 <td><?= $index + 1 ?></td>
-                                                <td><strong><i class="bi bi-building text-primary me-1"></i><?= htmlspecialchars($fac['name']) ?></strong></td>
-                                                <td><i class="bi bi-geo-alt text-muted me-1"></i><?= htmlspecialchars($fac['location']) ?></td>
+                                                <td><span class="cell-title"><i class="bi bi-building me-1 text-secondary"></i><?= htmlspecialchars($fac['name']) ?></span></td>
+                                                <td><i class="bi bi-geo-alt me-1 text-secondary"></i><?= htmlspecialchars($fac['location']) ?></td>
                                                 <td><?= htmlspecialchars($fac['description'] ?? '-') ?></td>
                                                 <td>
-                                                    <a href="facilities.php?edit=<?= $fac['id'] ?>" class="btn btn-sm btn-warning shadow-sm"><i class="bi bi-pencil"></i></a>
-                                                    <form method="POST" action="" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus fasilitas ini?')">
-                                                        <input type="hidden" name="action" value="delete">
-                                                        <input type="hidden" name="id" value="<?= $fac['id'] ?>">
-                                                        <button type="submit" class="btn btn-sm btn-danger shadow-sm"><i class="bi bi-trash"></i></button>
-                                                    </form>
+                                                    <div class="d-flex justify-content-center gap-1">
+                                                        <a href="facilities.php?edit=<?= $fac['id'] ?>" class="btn btn-sm btn-warning icon-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+                                                        <form method="POST" action="" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus fasilitas ini?')">
+                                                            <input type="hidden" name="action" value="delete">
+                                                            <input type="hidden" name="id" value="<?= $fac['id'] ?>">
+                                                            <button type="submit" class="btn btn-sm btn-danger icon-btn" title="Hapus"><i class="bi bi-trash"></i></button>
+                                                        </form>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -159,10 +171,9 @@ if (isset($_GET['edit'])) {
                             </table>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
-        </div>
+        </main>
     </div>
 </body>
-
 </html>
