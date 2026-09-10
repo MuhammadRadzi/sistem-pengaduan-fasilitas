@@ -1,6 +1,3 @@
--- Database Schema: Sistem Pengaduan Fasilitas
--- Kelompok 3 (Radzi, Mu'adz, Akhtaar) - Kelas 12A
-
 CREATE DATABASE IF NOT EXISTS db_pengaduan_fasilitas;
 USE db_pengaduan_fasilitas;
 
